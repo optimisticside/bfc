@@ -80,7 +80,7 @@ void genloop(Node *parent, int *loopcnt, FILE *output) {
 	fprintf(output, "loop%d:\n", id);
 	genlist(parent->childs, loopcnt, output);
 
-	fprintf(output, "\tcmp 0, %%eax\n"
+	fprintf(output, "\tcmp 0, %%rax\n"
 			"\tjle loop%d\n", id);
 }
 
