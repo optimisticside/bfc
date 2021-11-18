@@ -5,25 +5,26 @@
 
 // Generates the assembly code to create a buffer.
 void mkbuf(FILE *output, int size) {
-	fprintf(output, "buf:\n\t.zero %d", size);
+	fprintf(output, "buf:\n\t.zero %d\n", size);
 }
 
 // Generates code to set up a stack frame.
 void mksetup(FILE *output) {
 	fprintf(output, "\tpushq %%rbp\n"
-			"\tmovq %%rsp, %%rbp");
+			"\tmovq %%rsp, %%rbp\n");
 }
 
 void mkcleanup(FILE *output) {
 	fprintf(output, "\tmovq %%rbp, %%rsp\n"
-			"\tpopq %%rbp");
+			"\tpopq %%rbp\n");
 }
 
 // Generates code for basic operations.
 void genop(Node *curr, FILE *output) {
 	switch (curr->type) {
 	default:
-		fprintf(stderr, "Invalid node type for node %p\n", curr);
+		fprintf(stderr, "Invalid node type for node %p (type %d, token %ld)\n",
+				curr, curr->type, (long)(curr->tok->src - _src));
 		exit(-1);
 
 	case I_INC:	// Increment value at data pointer
@@ -47,17 +48,17 @@ void genop(Node *curr, FILE *output) {
 		// into where the data-pointer is pointing to.
 		fprintf(output, "\tpushq %%rax\n"
 				"\tcall _getchar\n"
-				"\tmovq %%rax, %%rbx"
-				"\tpopq %%rax"
-				"\tmovq %%rbx, (%%rax)");
+				"\tmovq %%rax, %%rbx\n"
+				"\tpopq %%rax\n"
+				"\tmovq %%rbx, (%%rax)\n");
 		break;
 
 	case I_OUTPUT:	// Write character to user
 		fprintf(output, "\tmovq %%rax, %%rbx\n"
-				"\t movq (%%rbx), %%rax"
-				"\tpushq %%rbx"
+				"\t movq (%%rbx), %%rax\n"
+				"\tpushq %%rbx\n"
 				"\tcall _putchar\n"
-				"\tpopq %%rax");
+				"\tpopq %%rax\n");
 		break;
 	}
 }
@@ -79,8 +80,8 @@ void genloop(Node *parent, int *loopcnt, FILE *output) {
 	fprintf(output, "loop%d:\n", id);
 	genlist(parent->childs, loopcnt, output);
 
-	fprintf(output, "\tcmp 0, %%eax"
-			"\tjle loop%d", id);
+	fprintf(output, "\tcmp 0, %%eax\n"
+			"\tjle loop%d\n", id);
 }
 
 
@@ -98,6 +99,7 @@ int gen(Node *root, FILE *output) {
 	mkbuf(output, BUFSIZE);
 	fprintf(output, ".text\n_start:\n");
 	mksetup(output);
+	fprintf(output, "\tmovq databuf, %%rax\n");
 
 	// `loopcnt` helps us create unique positions
 	// to jump to for multiple loops.

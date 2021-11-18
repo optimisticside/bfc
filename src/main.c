@@ -1,5 +1,7 @@
 #include "decl.h"
 
+char *_src;
+
 // Program entry point.
 int main(int argc, char *argv[]) {
 	if (argc < 3) {
@@ -17,6 +19,7 @@ int main(int argc, char *argv[]) {
 	fclose(input);
 	buf[fsiz] = '\0';
 
+	_src = buf;
 	Token *tok = lex(buf);
 	Node *root = parse(tok);
 

@@ -30,6 +30,7 @@ typedef struct _Token {
 typedef struct _Node {
 	struct _Node *parent;			// Parent (if existent)
 	InstructionType type;			// Node type
+	Token *tok;				// Original token
 	struct _Node *childs;			// Pointer to first child
 	struct _Node *next;			// Next node in list
 } Node;

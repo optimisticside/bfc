@@ -8,6 +8,8 @@
 #define BUFSIZE 3000
 #define STKSIZE 30
 
+extern char *_src;
+
 int toktype(char tok);
 Token *lex(char *buf);
 
