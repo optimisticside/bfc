@@ -100,7 +100,7 @@ int gen(Node *root, FILE *output) {
 	fprintf(output, "\n.section .text\n"
 			"_start:\n");
 	mksetup(output);
-	fprintf(output, "\tmovq databuf, %%rax\n");
+	fprintf(output, "\tmovq $buf, %%rax\n");
 
 	// `loopcnt` helps us create unique positions
 	// to jump to for multiple loops.
