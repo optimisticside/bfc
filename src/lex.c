@@ -3,15 +3,15 @@
 // Determines what a token is.
 int toktype(char tok) {
 	switch (tok) {
-	default: return TOK_NONE;
-	case '>': return TOK_PTRINC;
-	case '<': return TOK_PTRDEC;
-	case '+': return TOK_INC;
-	case '-': return TOK_DEC;
-	case '.': return TOK_INPUT;
-	case ',': return TOK_OUTPUT;
-	case '[': return TOK_OPEN;
-	case ']': return TOK_CLOSE;
+	case '>':	return TOK_PTRINC;
+	case '<':	return TOK_PTRDEC;
+	case '+':	return TOK_INC;
+	case '-':	return TOK_DEC;
+	case '.':	return TOK_INPUT;
+	case ',':	return TOK_OUTPUT;
+	case '[':	return TOK_OPEN;
+	case ']':	return TOK_CLOSE;
+	default:	return TOK_NONE;
 	}
 }
 
