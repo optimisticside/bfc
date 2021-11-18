@@ -73,5 +73,11 @@ Node *parse(Token *tok) {
 		prev = curr;
 	}
 
+	if (stkpos > 0) {
+		Node *last = stack[stkpos];
+		fprintf(stderr, "Mismatched brackets at node %p (token %ld)\n",
+				last, (long)(last->tok->src - _src));
+		exit(-1);
+	}
 	return root;
 }
