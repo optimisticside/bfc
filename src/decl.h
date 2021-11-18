@@ -17,6 +17,8 @@ InstructionType getinst(TokenType type);
 Node *parse(Token *tok);
 
 void mkbuf(FILE *output, int size);
+void mksetup(FILE *output);
+void mkcleanup(FILE *output);
 void genop(Node *curr, FILE *output);
 void genlist(Node *start, int *loopcnt, FILE *output);
 void genloop(Node *parent, int *loopcnt, FILE *output);

@@ -8,11 +8,22 @@ void mkbuf(FILE *output, int size) {
 	fprintf(output, "buf:\n\t.zero %d", size);
 }
 
+// Generates code to set up a stack frame.
+void mksetup(FILE *output) {
+	fprintf(output, "\tpushq %%rbp\n"
+			"\tmovq %%rsp, %%rbp");
+}
+
+void mkcleanup(FILE *output) {
+	fprintf(output, "\tmovq %%rbp, %%rsp\n"
+			"\tpopq %%rbp");
+}
+
 // Generates code for basic operations.
 void genop(Node *curr, FILE *output) {
 	switch (curr->type) {
 	default:
-		fprintf(stderr, "Invalid node type for node %p", curr);
+		fprintf(stderr, "Invalid node type for node %p\n", curr);
 		exit(-1);
 
 	case I_INC:	// Increment value at data pointer
@@ -65,7 +76,7 @@ void genlist(Node *start, int *loopcnt, FILE *output) {
 // Generates code for a loop.
 void genloop(Node *parent, int *loopcnt, FILE *output) {
 	int id = (*loopcnt)++;
-	fprintf(output, "loop%d:", id);
+	fprintf(output, "loop%d:\n", id);
 	genlist(parent->childs, loopcnt, output);
 
 	fprintf(output, "\tcmp 0, %%eax"
@@ -85,16 +96,15 @@ int gen(Node *root, FILE *output) {
 	// Data pointer is %rax.
 	fprintf(output, ".data");
 	mkbuf(output, BUFSIZE);
-	fprintf(output, ".text\n_start:");
-	fprintf(output, "\tpush %%rbp\n"
-			"\tmovq %%rsp, %%rbp");
-	
+	fprintf(output, ".text\n_start:\n");
+	mksetup(output);
+
 	// `loopcnt` helps us create unique positions
 	// to jump to for multiple loops.
 	int loopcnt = 1;
 	genlist(root, &loopcnt, output);
 
-	fprintf(output, "\tmovq 0, %%eax\n"
-			"\tret");
+	mkcleanup(output);
+	fprintf(output, "\tret");
 	return 0;
 }
