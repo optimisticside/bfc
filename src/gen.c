@@ -5,7 +5,7 @@
 
 // Generates the assembly code to create a buffer.
 void mkbuf(FILE *output, int size) {
-	fprintf(output, "buf:\n\t.zero %d\n", size);
+	fprintf(output, "\tbuf: .zero %d\n", size);
 }
 
 // Generates code to set up a stack frame.
@@ -95,9 +95,10 @@ int gen(Node *root, FILE *output) {
 	// We do not currently plan on checking to see if that
 	// buffer will overflow or not (we plan on doing this later).
 	// Data pointer is %rax.
-	fprintf(output, ".data");
+	fprintf(output, ".section .data\n");
 	mkbuf(output, BUFSIZE);
-	fprintf(output, ".text\n_start:\n");
+	fprintf(output, "\n.section .text\n"
+			"_start:\n");
 	mksetup(output);
 	fprintf(output, "\tmovq databuf, %%rax\n");
 
