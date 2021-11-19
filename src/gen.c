@@ -47,7 +47,8 @@ void genop(Node *curr, FILE *output) {
 		// We need to move what _getchar gives us
 		// into where the data-pointer is pointing to.
 		fprintf(output, "\tpushq %%rax\n"
-				"\tcall _getchar\n"
+				"\tmovq stdin(%%rip), %%rdi\n"
+				"\tcall getc@PLT\n"
 				"\tmovq %%rax, %%rbx\n"
 				"\tpopq %%rax\n"
 				"\tmovq %%rbx, (%%rax)\n");
@@ -55,9 +56,10 @@ void genop(Node *curr, FILE *output) {
 
 	case I_OUTPUT:	// Write character to user
 		fprintf(output, "\tmovq %%rax, %%rbx\n"
-				"\t movq (%%rbx), %%rax\n"
+				"\t movq (%%rbx), %%rdi\n"
 				"\tpushq %%rbx\n"
-				"\tcall _putchar\n"
+				"\tmovq stdout(%%rip), %%rsi"
+				"\tcall putc@PLT\n"
 				"\tpopq %%rax\n");
 		break;
 	}
@@ -98,9 +100,10 @@ int gen(Node *root, FILE *output) {
 	fprintf(output, ".section .data\n");
 	mkbuf(output, BUFSIZE);
 	fprintf(output, "\n.section .text\n"
-			"_start:\n");
+			".globl main\n"
+			"main:\n");
 	mksetup(output);
-	fprintf(output, "\tmovq $buf, %%rax\n");
+	fprintf(output, "\tlea buf(%%rip), %%rax\n");
 
 	// `loopcnt` helps us create unique positions
 	// to jump to for multiple loops.
