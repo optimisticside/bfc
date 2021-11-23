@@ -29,16 +29,16 @@ void genop(Node *curr, FILE *output) {
 
 	case I_INC:	// Increment value at data pointer
 		if (curr->data)
-			fprintf(output, "\taddq $%ld, (%%rax)\n", curr->data);
+			fprintf(output, "\taddb $%ld, (%%rax)\n", curr->data);
 		else
 			fprintf(output, "\tincq (%%rax)\n");
 		break;
 
 	case I_DEC:	// Decrement value at data pointer
 		if (curr->data)
-			fprintf(output, "\tsubq $%ld, (%%rax)\n", curr->data);
+			fprintf(output, "\tsubb $%ld, (%%rax)\n", curr->data);
 		else
-			fprintf(output, "\tdecq (%%rax)\n");
+			fprintf(output, "\tdecb (%%rax)\n");
 		break;
 
 	case I_PTRINC:	// Increment data pointer
@@ -63,14 +63,14 @@ void genop(Node *curr, FILE *output) {
 				"\tcall getc@PLT\n"
 				"\tmovq %%rax, %%rbx\n"
 				"\tpopq %%rax\n"
-				"\tmovq %%rbx, (%%rax)\n");
+				"\tmovb %%bl, (%%rax)\n");
 		break;
 
 	case I_OUTPUT:	// Write character to user
 		fprintf(output, "\tmovq %%rax, %%rbx\n"
-				"\t movq (%%rbx), %%rdi\n"
+				"\tmovb (%%rbx), %%dil\n"
 				"\tpushq %%rbx\n"
-				"\tmovq stdout(%%rip), %%rsi"
+				"\tmovq stdout(%%rip), %%rsi\n"
 				"\tcall putc@PLT\n"
 				"\tpopq %%rax\n");
 		break;
