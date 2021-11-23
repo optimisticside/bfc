@@ -30,5 +30,10 @@ int main(int argc, char *argv[]) {
 	optimize(root);
 
 	FILE *output = fopen(argv[2], "w+");
+	if (output == NULL) {
+		fprintf(stderr, "Unable to create output file '%s'\n"
+				"Check the directory permissions.\n", argv[2]);
+		return -1;
+	}
 	return gen(root, output);
 }
