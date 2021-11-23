@@ -21,7 +21,7 @@ Token *lex(char *buf) {
 	Token *head = NULL, *prev = NULL, *curr;
 	char c;
 
-	while ((c = *buf) != '\0') {
+	while ((c = *buf++) != '\0') {
 		int type = toktype(c);
 		if (type == TOK_NONE)
 			continue;
@@ -30,10 +30,9 @@ Token *lex(char *buf) {
 			prev->next = curr;
 		if (head == NULL)
 			head = curr;
-		curr->src = buf;
+		curr->src = buf - 1;
 		curr->type = type;
 		prev = curr;
-		buf++;
 	}
 
 	return head;
