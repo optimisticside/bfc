@@ -45,12 +45,25 @@ void optincdec(Node *curr, InstructionType inc, InstructionType dec) {
 	prev->data = c;
 }
 
+// Check for a potential infinite loop.
+void chkinfloop(Node *node) {
+	if (node == NULL || node->type != I_LOOP)
+		return;
+	for (Node *child = node->childs; child != NULL; child = child->next) {
+		if (child->type == I_DEC || child->type == I_INC)
+			return;
+	}
+	printf("Warning: Potential infinite loop at token %ld (node %p)\n",
+		(long)(node->tok->src - _src), node);
+}
+
 // Main tree optimization routine.
 // Loops through nodes and calls itself recursively
 // to descend tree.
 void optimize(Node *curr) {
 	for (; curr != NULL && curr->type != I_NONE; curr = curr->next) {
 		if (curr->type == I_LOOP) {
+			chkinfloop(curr);
 			optimize(curr->childs);
 			continue;
 		}

@@ -22,6 +22,7 @@ Node *parse(Token *tok);
 
 void rmnode(Node *node);
 void optincdec(Node *curr, InstructionType inc, InstructionType dec);
+void chkinfloop(Node *node);
 void optimize(Node *curr);
 
 void mkbuf(int size, FILE *output);
