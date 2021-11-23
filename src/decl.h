@@ -23,7 +23,7 @@ void rmnode(Node *node);
 void optincdec(Node *curr, InstructionType inc, InstructionType dec);
 void optimize(Node *curr);
 
-void mkbuf(FILE *output, int size);
+void mkbuf(int size, FILE *output);
 void mksetup(FILE *output);
 void mkcleanup(FILE *output);
 void genop(Node *curr, FILE *output);

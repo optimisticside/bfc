@@ -4,7 +4,7 @@
 #define BUFSIZE 3000	// Buffer size
 
 // Generates the assembly code to create a buffer.
-void mkbuf(FILE *output, int size) {
+void mkbuf(int size, FILE *output) {
 	fprintf(output, "\tbuf: .zero %d\n", size);
 }
 
@@ -109,7 +109,7 @@ int gen(Node *root, FILE *output) {
 	// buffer will overflow or not (we plan on doing this later).
 	// Data pointer is %rax.
 	fprintf(output, ".section .data\n");
-	mkbuf(output, BUFSIZE);
+	mkbuf(BUFSIZE, output);
 	fprintf(output, "\n.section .text\n"
 			".globl main\n"
 			"main:\n");
