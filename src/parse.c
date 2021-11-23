@@ -3,7 +3,7 @@
 // Helper function to add node to stack.
 void stkpush(Node **stack, int *stkpos, Node *elem) {
 	if ((*stkpos)++ > STKSIZE) {
-		fprintf(stderr, "Stack overflow at node %p (type %d, token %ld)\n",
+		fprintf(stderr, "Bracket stack overflow at node %p (type %d, token %ld)\n",
 				elem, elem->type, (long)(elem->tok->src - _src));
 		exit(-1);
 	}
@@ -13,7 +13,7 @@ void stkpush(Node **stack, int *stkpos, Node *elem) {
 // Helper function to remove a node from the stack.
 void stkpop(Node **stack, int *stkpos) {
 	if ((*stkpos)-- < 0) {
-		fprintf(stderr, "Stack underflow (stack size %d)\n",
+		fprintf(stderr, "Bracket stack underflow (stack size %d)\n",
 				*stkpos);
 		exit(-1);
 	}
@@ -59,13 +59,13 @@ Node *parse(Token *tok) {
 	// If a node has children, then it will store the pointer
 	// to its linked list of children.
 	Node **stack = calloc(STKSIZE, sizeof(Token));
-	int stkpos = 0, opening = 0;
+	int stkpos = 0, descend = 0;
 	Node *root = NULL, *prev = NULL, *curr;
 
 	for (; tok != NULL && tok->type != TOK_NONE; tok = tok->next) {
 		// We will continue adding nodes in a linked list
 		// for adjecent operators. Once we reach the start of a loop
-		// we will set the opening flag.
+		// we will set the descend flag.
 		if (tok->type == TOK_CLOSE) {
 			stkpop(stack, &stkpos);
 			if (prev != NULL)
@@ -77,24 +77,23 @@ Node *parse(Token *tok) {
 		if (root == NULL)
 			root = curr;
 		if (prev != NULL) {
-			if (opening) {
-				curr->parent = prev;
+			// We can only descend if there is a previous node,
+			// for obvious reasons.
+			if (descend)
 				prev->childs = curr;
-			} else {
+			else
 				prev->next = curr;
-				curr->parent = prev->parent;
-			}
+			curr->parent = descend ? prev : prev->parent;
 		}
-		opening = 0;
+		descend = 0;
 		if (tok->type == TOK_OPEN) {
 			stkpush(stack, &stkpos, curr);
-			opening = 1;
+			descend = 1;
 		}
 		curr->type = getinst(tok->type);
 		curr->tok = tok;
 		prev = curr;
 	}
-
 	if (stkpos > 0) {
 		Node *last = stack[stkpos];
 		fprintf(stderr, "Mismatched brackets at node %p (token %ld)\n",

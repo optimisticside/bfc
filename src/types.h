@@ -13,10 +13,10 @@ typedef enum {
 // Token types.
 typedef enum {
 	TOK_NONE,
-	TOK_PTRINC, TOK_PTRDEC,
-	TOK_INC, TOK_DEC,
-	TOK_INPUT, TOK_OUTPUT,
-	TOK_OPEN, TOK_CLOSE,
+	TOK_PTRINC, TOK_PTRDEC,		// Data pointer operations
+	TOK_INC, TOK_DEC,		// Data operations
+	TOK_INPUT, TOK_OUTPUT,		// IO operations
+	TOK_OPEN, TOK_CLOSE,		// Brackets
 } TokenType;
 
 // Lexical token.

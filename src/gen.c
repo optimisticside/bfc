@@ -14,6 +14,8 @@ void mksetup(FILE *output) {
 			"\tmovq %%rsp, %%rbp\n");
 }
 
+// Generates code to do housekeeping
+// before exiting a routine.
 void mkcleanup(FILE *output) {
 	fprintf(output, "\tmovq %%rbp, %%rsp\n"
 			"\tpopq %%rbp\n");
@@ -56,8 +58,6 @@ void genop(Node *curr, FILE *output) {
 		break;
 
 	case I_INPUT:	// Read character from user
-		// We need to move what _getchar gives us
-		// into where the data-pointer is pointing to.
 		fprintf(output, "\tpushq %%rax\n"
 				"\tmovq stdin(%%rip), %%rdi\n"
 				"\tcall getc@PLT\n"

@@ -50,7 +50,6 @@ void optincdec(Node *curr, InstructionType inc, InstructionType dec) {
 // to descend tree.
 void optimize(Node *curr) {
 	for (; curr != NULL && curr->type != I_NONE; curr = curr->next) {
-		//putchar(*curr->tok->src);
 		if (curr->type == I_LOOP) {
 			optimize(curr->childs);
 			continue;
