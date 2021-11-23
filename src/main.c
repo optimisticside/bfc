@@ -5,7 +5,8 @@ char *_src;
 // Program entry point.
 int main(int argc, char *argv[]) {
 	if (argc < 3) {
-		fprintf(stderr, "Invalid parameters\n");
+		fprintf(stderr, "Invalid parameters\n"
+				"Usage: %s [INPUT FILE] [OUTPUT FILE]\n", argv[0]);
 		return -1;
 	}
 
