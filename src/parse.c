@@ -19,6 +19,20 @@ void stkpop(Node **stack, int *stkpos) {
 	}
 }
 
+// Debugs the parser by printing the syntax tree
+// in a very simple format.
+void printnode(Node *node, int *id) {
+	for (; node != NULL && node->type != I_NONE; node = node->next) {
+		if (node->type == I_LOOP) {
+			printf("%d ", ++(*id));
+			printf("\n%d: ", *id);
+			printnode(node->childs, id);
+		} else
+			printf("%c ", *node->tok->src);
+	}
+	putchar('\n');
+}
+
 // Retrieves an instruction type to correspond
 // the given token type.
 // Ignores TOK_CLOSE.
@@ -49,20 +63,28 @@ Node *parse(Token *tok) {
 	Node *root = NULL, *prev = NULL, *curr;
 
 	for (; tok != NULL && tok->type != TOK_NONE; tok = tok->next) {
+		// We will continue adding nodes in a linked list
+		// for adjecent operators. Once we reach the start of a loop
+		// we will set the opening flag.
 		if (tok->type == TOK_CLOSE) {
 			stkpop(stack, &stkpos);
-			prev = prev->parent;
+			if (prev != NULL)
+				prev = prev->parent;
 			continue;
 		}
-		curr = malloc(sizeof(Node));
-		if (prev != NULL) {
-			prev->next = curr;
-			if (opening)
-				prev->childs = curr;
-			curr->parent = opening ? prev : prev->parent;
-		}
+		curr = calloc(1, sizeof(Node));
+		curr->prev = prev;
 		if (root == NULL)
 			root = curr;
+		if (prev != NULL) {
+			if (opening) {
+				curr->parent = prev;
+				prev->childs = curr;
+			} else {
+				prev->next = curr;
+				curr->parent = prev->parent;
+			}
+		}
 		opening = 0;
 		if (tok->type == TOK_OPEN) {
 			stkpush(stack, &stkpos, curr);

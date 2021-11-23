@@ -33,6 +33,8 @@ typedef struct _Node {
 	Token *tok;				// Original token
 	struct _Node *childs;			// Pointer to first child
 	struct _Node *next;			// Next node in list
+	struct _Node *prev;			// Previous node in list
+	long data;				// Any additional data
 } Node;
 
 #endif /* !_TYPES_H_ */

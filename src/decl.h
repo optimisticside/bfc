@@ -16,7 +16,12 @@ Token *lex(char *buf);
 void stkpush(Node **stack, int *stkpos, Node *elem);
 void stkpop(Node **stack, int *stkpos);
 InstructionType getinst(TokenType type);
+void printnode(Node *node, int *id);
 Node *parse(Token *tok);
+
+void rmnode(Node *node);
+void optincdec(Node *curr, InstructionType inc, InstructionType dec);
+void optimize(Node *curr);
 
 void mkbuf(FILE *output, int size);
 void mksetup(FILE *output);

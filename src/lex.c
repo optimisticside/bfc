@@ -21,11 +21,11 @@ Token *lex(char *buf) {
 	Token *head = NULL, *prev = NULL, *curr;
 	char c;
 
-	while ((c = *buf++) != '\0') {
+	while ((c = *buf) != '\0') {
 		int type = toktype(c);
 		if (type == TOK_NONE)
 			continue;
-		curr = malloc(sizeof(Token));
+		curr = calloc(1, sizeof(Token));
 		if (prev != NULL)
 			prev->next = curr;
 		if (head == NULL)
@@ -33,6 +33,7 @@ Token *lex(char *buf) {
 		curr->src = buf;
 		curr->type = type;
 		prev = curr;
+		buf++;
 	}
 
 	return head;

@@ -22,6 +22,7 @@ int main(int argc, char *argv[]) {
 	_src = buf;
 	Token *tok = lex(buf);
 	Node *root = parse(tok);
+	optimize(root);
 
 	FILE *output = fopen(argv[2], "w+");
 	return gen(root, output);

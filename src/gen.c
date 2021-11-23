@@ -28,19 +28,31 @@ void genop(Node *curr, FILE *output) {
 		exit(-1);
 
 	case I_INC:	// Increment value at data pointer
-		fprintf(output, "\tincq (%%rax)\n");
+		if (curr->data)
+			fprintf(output, "\taddq $%ld, (%%rax)\n", curr->data);
+		else
+			fprintf(output, "\tincq (%%rax)\n");
 		break;
 
 	case I_DEC:	// Decrement value at data pointer
-		fprintf(output, "\tdecq (%%rax)\n");
+		if (curr->data)
+			fprintf(output, "\tsubq $%ld, (%%rax)\n", curr->data);
+		else
+			fprintf(output, "\tdecq (%%rax)\n");
 		break;
 
 	case I_PTRINC:	// Increment data pointer
-		fprintf(output, "\tincq %%rax\n");
+		if (curr->data)
+			fprintf(output, "\taddq $%ld, %%rax\n", curr->data);
+		else
+			fprintf(output, "\tincq %%rax\n");
 		break;
 
 	case I_PTRDEC:	// Decrement data pointer
-		fprintf(output, "\tdecq %%rax\n");
+		if (curr->data)
+			fprintf(output, "\tsubq $%ld, %%rax\n", curr->data);
+		else
+			fprintf(output, "\tdecq %%rax\n");
 		break;
 
 	case I_INPUT:	// Read character from user
@@ -68,7 +80,7 @@ void genop(Node *curr, FILE *output) {
 // Generates all nodes.
 // Calls itself recursively if necessary.
 void genlist(Node *start, int *loopcnt, FILE *output) {
-	for (Node *curr = start; curr != NULL; curr = curr->next) {
+	for (Node *curr = start; curr != NULL && curr->type != I_NONE; curr = curr->next) {
 		if (curr->type == I_LOOP)
 			genloop(curr, loopcnt, output);
 		else
