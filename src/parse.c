@@ -63,7 +63,7 @@ Node *parse(Token *tok) {
 			// We provide it with the current node for
 			// debugging purposes.
 			if (stkpop(stack, &stkpos) != 0) {
-				fprintf(stderr, "Unpaired closing bracket at token %ld (bracket stack size %d)\n",
+				fprintf(stderr, "Unpaired closing bracket at token %ld (stack size %d)\n",
 						(long)(tok->src - _src), stkpos);
 				exit(-1);
 			};
