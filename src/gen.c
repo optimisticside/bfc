@@ -31,7 +31,7 @@ void genop(Node *curr, FILE *output) {
 		if (curr->data)
 			fprintf(output, "\taddb $%ld, (%%rax)\n", curr->data);
 		else
-			fprintf(output, "\tincq (%%rax)\n");
+			fprintf(output, "\tincb (%%rax)\n");
 		break;
 
 	case I_DEC:	// Decrement value at data pointer
