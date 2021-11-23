@@ -14,8 +14,8 @@ extern char *_src;
 int toktype(char tok);
 Token *lex(char *buf);
 
-void stkpush(Node **stack, int *stkpos, Node *elem);
-void stkpop(Node **stack, int *stkpos);
+int stkpush(Node **stack, int *stkpos, Node *elem);
+int stkpop(Node **stack, int *stkpos);
 InstructionType getinst(TokenType type);
 void printnode(Node *node, int *id);
 Node *parse(Token *tok);

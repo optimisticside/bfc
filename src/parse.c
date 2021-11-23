@@ -1,22 +1,18 @@
 #include "decl.h"
 
 // Helper function to add node to stack.
-void stkpush(Node **stack, int *stkpos, Node *elem) {
-	if ((*stkpos)++ > STKSIZE) {
-		fprintf(stderr, "Bracket stack overflow at node %p (type %d, token %ld)\n",
-				elem, elem->type, (long)(elem->tok->src - _src));
-		exit(-1);
-	}
+int stkpush(Node **stack, int *stkpos, Node *elem) {
+	if (++(*stkpos) > STKSIZE)
+		return 1;
 	stack[*stkpos] = elem;
+	return 0;
 }
 
 // Helper function to remove a node from the stack.
-void stkpop(Node **stack, int *stkpos) {
-	if ((*stkpos)-- < 0) {
-		fprintf(stderr, "Bracket stack underflow (stack size %d)\n",
-				*stkpos);
-		exit(-1);
-	}
+int stkpop(Node **stack, int *stkpos) {
+	if (--(*stkpos) < 0)
+		return 1;
+	return 0;
 }
 
 // Debugs the parser by printing the syntax tree
@@ -45,10 +41,7 @@ InstructionType getinst(TokenType type) {
 	case TOK_INPUT:		return I_INPUT;
 	case TOK_OUTPUT:	return I_OUTPUT;
 	case TOK_OPEN:		return I_LOOP;
-	default:
-		printf("Warning: Invalid token type %d\n",
-			type);
-		return I_NONE;
+	default:		return I_NONE;
 	}
 }
 
@@ -67,7 +60,13 @@ Node *parse(Token *tok) {
 		// for adjecent operators. Once we reach the start of a loop
 		// we will set the descend flag.
 		if (tok->type == TOK_CLOSE) {
-			stkpop(stack, &stkpos);
+			// We provide it with the current node for
+			// debugging purposes.
+			if (stkpop(stack, &stkpos) != 0) {
+				fprintf(stderr, "Mismatched bracket at token %ld (stack size %d)\n",
+						(long)(tok->src - _src), stkpos);
+				exit(-1);
+			};
 			if (prev != NULL)
 				prev = prev->parent;
 			continue;
@@ -87,10 +86,17 @@ Node *parse(Token *tok) {
 		}
 		descend = 0;
 		if (tok->type == TOK_OPEN) {
-			stkpush(stack, &stkpos, curr);
+			if (stkpush(stack, &stkpos, curr) != 0) {
+				fprintf(stderr, "Bracket stack overflow at token %ld (stack size %d)\n",
+						(long)(tok->src - _src), stkpos);
+				exit(-1);
+			};
 			descend = 1;
 		}
-		curr->type = getinst(tok->type);
+		if ((curr->type = getinst(tok->type)) == I_NONE) {
+			printf("Warning: Invalid token type %d (token %ld)\n",
+				tok->type, (long)(tok->src - _src));
+		}
 		curr->tok = tok;
 		prev = curr;
 	}
