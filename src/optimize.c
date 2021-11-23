@@ -9,9 +9,8 @@ void rmnode(Node *node) {
 	if (node->parent && node->parent->childs == node)
 		node->parent->childs = NULL;
 	if (node->childs != NULL) {
-		for (Node *curr = node->childs; curr != NULL; curr = curr->next) {
+		for (Node *curr = node->childs; curr != NULL; curr = curr->next)
 			rmnode(curr);
-		}
 	}
 	free(node);
 }
