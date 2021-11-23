@@ -70,7 +70,7 @@ void genop(Node *curr, FILE *output) {
 		fprintf(output, "\tmovq %%rax, %%rbx\n"
 				"\t movq (%%rbx), %%rdi\n"
 				"\tpushq %%rbx\n"
-				"\tmovq stdout(%%rip), %%rsi"
+				"\tmovq stdout(%%rip), %%rsi\n"
 				"\tcall putc@PLT\n"
 				"\tpopq %%rax\n");
 		break;

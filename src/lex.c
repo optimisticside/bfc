@@ -7,8 +7,8 @@ int toktype(char tok) {
 	case '<':	return TOK_PTRDEC;
 	case '+':	return TOK_INC;
 	case '-':	return TOK_DEC;
-	case '.':	return TOK_INPUT;
-	case ',':	return TOK_OUTPUT;
+	case ',':	return TOK_INPUT;
+	case '.':	return TOK_OUTPUT;
 	case '[':	return TOK_OPEN;
 	case ']':	return TOK_CLOSE;
 	default:	return TOK_NONE;
