@@ -67,9 +67,8 @@ void genop(Node *curr, FILE *output) {
 		break;
 
 	case I_OUTPUT:	// Write character to user
-		fprintf(output, "\tmovq %%rax, %%rbx\n"
-				"\tmovb (%%rbx), %%dil\n"
-				"\tpushq %%rbx\n"
+		fprintf(output, "\tmovb (%%rax), %%dil\n"
+				"\tpushq %%rax\n"
 				"\tmovq stdout(%%rip), %%rsi\n"
 				"\tcall putc@PLT\n"
 				"\tpopq %%rax\n");
