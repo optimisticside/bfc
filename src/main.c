@@ -11,6 +11,10 @@ int main(int argc, char *argv[]) {
 	}
 
 	FILE *input = fopen(argv[1], "rb");
+	if (input == NULL) {
+		fprintf(stderr, "Unable to open file '%s'\n", argv[1]);
+		return -1;
+	}
 	fseek(input, 0, SEEK_END);
 	long fsiz = ftell(input);
 	fseek(input, 0, SEEK_SET);
