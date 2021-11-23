@@ -63,7 +63,7 @@ Node *parse(Token *tok) {
 			// We provide it with the current node for
 			// debugging purposes.
 			if (stkpop(stack, &stkpos) != 0) {
-				fprintf(stderr, "Mismatched bracket at token %ld (stack size %d)\n",
+				fprintf(stderr, "Unpaired closing bracket at token %ld (bracket stack size %d)\n",
 						(long)(tok->src - _src), stkpos);
 				exit(-1);
 			};
@@ -102,8 +102,8 @@ Node *parse(Token *tok) {
 	}
 	if (stkpos > 0) {
 		Node *last = stack[stkpos];
-		fprintf(stderr, "Mismatched brackets at node %p (token %ld)\n",
-				last, (long)(last->tok->src - _src));
+		fprintf(stderr, "Unpaired opening bracket at token %ld (node %p)\n",
+				(long)(last->tok->src - _src), last);
 		exit(-1);
 	}
 	return root;
