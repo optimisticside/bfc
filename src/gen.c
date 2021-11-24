@@ -10,15 +10,15 @@ void mkbuf(int size, FILE *output) {
 
 // Generates code to set up a stack frame.
 void mksetup(FILE *output) {
-	fprintf(output, "\tmovq $0, %%rax\n"
-			"\tpushq %%rbp\n"
+	fprintf(output, "\tpushq %%rbp\n"
 			"\tmovq %%rsp, %%rbp\n");
 }
 
 // Generates code to do housekeeping
 // before exiting a routine.
 void mkcleanup(FILE *output) {
-	fprintf(output, "\tmovq %%rbp, %%rsp\n"
+	fprintf(output, "\tmovq $0, %%rax\n"
+			"\tmovq %%rbp, %%rsp\n"
 			"\tpopq %%rbp\n");
 }
 
