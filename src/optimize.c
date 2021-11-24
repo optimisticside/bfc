@@ -77,7 +77,7 @@ void chkinfloop(Node *node) {
 void optimize(Node *curr) {
 	for (; curr != NULL && curr->type != I_NONE; curr = curr->next) {
 		if (curr->type == I_LOOP) {
-			chkinfloop(curr);
+			//chkinfloop(curr);
 			optimize(curr->childs);
 			optloop(curr);
 			continue;
