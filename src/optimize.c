@@ -44,6 +44,19 @@ void optincdec(Node *curr, InstructionType inc, InstructionType dec) {
 	prev->data = c;
 }
 
+// Optimizes nested loops.
+// An example of this is [[ ... ]] to [ ... ]
+void optloop(Node *node) {
+	if (node->type != I_LOOP || node->childs == NULL)
+		return;
+	if (node->childs->type != I_LOOP || node->childs->next != NULL)
+		return;
+	Node *child = node->childs;
+	node->childs = child->childs;
+	child->childs = NULL;
+	rmnode(child);
+}
+
 // Check for a potential infinite loop.
 void chkinfloop(Node *node) {
 	if (node == NULL || node->type != I_LOOP)
@@ -64,6 +77,7 @@ void optimize(Node *curr) {
 		if (curr->type == I_LOOP) {
 			chkinfloop(curr);
 			optimize(curr->childs);
+			optloop(curr);
 			continue;
 		}
 		optincdec(curr, I_PTRINC, I_PTRDEC);
