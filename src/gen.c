@@ -84,7 +84,9 @@ void genop(Node *curr, FILE *output) {
 // Generates all nodes.
 // Calls itself recursively if necessary.
 void genlist(Node *start, int *loopcnt, FILE *output) {
-	for (Node *curr = start; curr != NULL && curr->type != I_NONE; curr = curr->next) {
+	for (Node *curr = start; curr != NULL; curr = curr->next) {
+		if (curr->type == I_NONE)
+			continue;
 		if (curr->type == I_LOOP)
 			genloop(curr, loopcnt, output);
 		else

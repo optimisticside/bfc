@@ -73,7 +73,10 @@ void optloop(Node *node) {
 			if (curr->type == I_INC || curr->type == I_DEC || curr->type == I_INPUT)
 				return;
 		}
-		rmnode(node);
+		if (node->prev == NULL)
+			node->type = I_NONE;
+		else
+			rmnode(node);
 	}
 }
 
@@ -117,8 +120,8 @@ void chkinfloop(Node *node) {
 // Main tree optimization routine.
 // Loops through nodes and calls itself recursively
 // to descend tree.
-void optimize(Node *curr) {
-	for (; curr != NULL && curr->type != I_NONE; curr = curr->next) {
+void optimize(Node *node) {
+	for (Node *curr = node; curr != NULL && curr->type != I_NONE; curr = curr->next) {
 		if (curr->type == I_LOOP) {
 			optimize(curr->childs);
 			optloop(curr);
@@ -128,4 +131,8 @@ void optimize(Node *curr) {
 		optincdec(curr, I_PTRINC, I_PTRDEC);
 		optincdec(curr, I_INC, I_DEC);
 	}
+	// Junk optimization depends on the nodes
+	// ahead to also be optimized.
+	for (Node *curr = node; curr != NULL && curr->type != I_NONE; curr = curr->next)
+		optjunk(curr);
 }
