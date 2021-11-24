@@ -58,8 +58,8 @@ void optloop(Node *node) {
 		child->childs = NULL;
 		rmnode(child);
 	}
-	// Also optimizes clear loops, that just do something
-	// like [-], which we can replace with clear.
+	// Optimizes clear loops, that just do [-]
+	// and can be replaced by a clear instruction.
 	if (child->type == I_DEC && child->next == NULL && !child->data) {
 		node->type = I_CLEAR;
 		rmnode(child);
