@@ -51,7 +51,7 @@ Node *parse(Token *tok) {
 	// Neighboring nodes will be arranged in a linked list.
 	// If a node has children, then it will store the pointer
 	// to its linked list of children.
-	Node **stack = calloc(STKSIZE, sizeof(Token));
+	Node **stack = calloc(STKSIZE, sizeof(Node));
 	int stkpos = 0, descend = 0;
 	Node *root = NULL, *prev = NULL, *curr;
 
