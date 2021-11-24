@@ -31,7 +31,8 @@ void optincdec(Node *curr, InstructionType inc, InstructionType dec) {
 	if (c == 0) {
 		// In case this previous node is the root node
 		// in the list, we will not deallocate it, but rather
-		// change its type to I_NONE.
+		// change its type to I_NONE. This is done in other places
+		// of this file for the same reason.
 		if (prev->prev == NULL && prev->parent == NULL)
 			prev->type = I_NONE;
 		else
@@ -93,8 +94,6 @@ void optjunk(Node *node) {
 			prev = curr->prev;
 			if (curr->type != I_INC && curr->type != I_DEC && curr->type != I_CLEAR && curr->type != I_INPUT)
 				break;
-			// As stated before, we cannot remove the node
-			// if it is the root node.
 			if (prev == NULL && curr->parent == NULL)
 				curr->type = I_NONE;
 			else
