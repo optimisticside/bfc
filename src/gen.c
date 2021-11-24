@@ -90,11 +90,12 @@ void genlist(Node *start, int *loopcnt, FILE *output) {
 // Generates code for a loop.
 void genloop(Node *parent, int *loopcnt, FILE *output) {
 	int id = (*loopcnt)++;
-	fprintf(output, "loop%d:\n", id);
+	fprintf(output, "loop%d:\n"
+			"\tcmpb $0, (%%rax)\n"
+			"\tjz end%d\n", id, id);
 	genlist(parent->childs, loopcnt, output);
-
-	fprintf(output, "\tcmpb $0, (%%rax)\n"
-			"\tjnz loop%d\n", id);
+	fprintf(output, "\tjmp loop%d\n"
+			"end%d:\n", id, id);
 }
 
 
