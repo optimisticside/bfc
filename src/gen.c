@@ -1,8 +1,5 @@
 #include "decl.h"
 
-// General information
-#define BUFSIZE 3000	// Buffer size
-
 // Generates the assembly code to create a buffer.
 void mkbuf(int size, FILE *output) {
 	fprintf(output, "\t.lcomm buf, %d\n", size);
