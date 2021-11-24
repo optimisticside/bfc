@@ -53,6 +53,8 @@ void optloop(Node *node) {
 		return;
 	Node *child = node->childs;
 	node->childs = child->childs;
+	// We need to set the childs pointer to NULL,
+	// or `rmnode` will remove all of its children.
 	child->childs = NULL;
 	rmnode(child);
 }
