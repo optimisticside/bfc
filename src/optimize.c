@@ -77,10 +77,27 @@ void optloop(Node *node) {
 	}
 }
 
-// Optimizes operations that execute after the program's
-// last I/O instruction.
+// Optimizes operations that don't have any affects
+// on the program.
 void optjunk(Node *node) {
-	// TODO: Do this later.
+	if (node == NULL)
+		return;
+	// Remove operations before input and clear operations,
+	// which will clobber the data.
+	if (node->type == I_INPUT || node->type == I_CLEAR) {
+		Node *prev = NULL;
+		for (Node *curr = node->prev; curr != NULL; curr = prev) {
+			prev = curr->prev;
+			if (curr->type != I_INC && curr->type != I_DEC && curr->type != I_CLEAR && curr->type != I_INPUT)
+				break;
+			// As stated before, we cannot remove the node
+			// if it is the root node.
+			if (prev == NULL && curr->parent == NULL)
+				curr->type = I_NONE;
+			else
+				rmnode(curr);
+		}
+	}
 }
 
 // Check for a potential infinite loop.
