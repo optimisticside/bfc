@@ -59,6 +59,12 @@ void optloop(Node *node) {
 	rmnode(child);
 }
 
+// Optimizes operations that execute after the program's
+// last I/O instruction.
+void optjunk(Node *node) {
+	// TODO: Do this later.
+}
+
 // Check for a potential infinite loop.
 void chkinfloop(Node *node) {
 	if (node == NULL || node->type != I_LOOP)
