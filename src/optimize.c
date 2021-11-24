@@ -66,6 +66,8 @@ void chkinfloop(Node *node) {
 	for (Node *child = node->childs; child != NULL; child = child->next) {
 		if (child->type == I_DEC || child->type == I_INC)
 			return;
+		if (child->type == I_PTRINC || child->type == I_PTRDEC)
+			return;
 	}
 	printf("Warning: Potential infinite loop at token %ld (node %p)\n",
 		(long)(node->tok->src - _src), node);
@@ -77,7 +79,7 @@ void chkinfloop(Node *node) {
 void optimize(Node *curr) {
 	for (; curr != NULL && curr->type != I_NONE; curr = curr->next) {
 		if (curr->type == I_LOOP) {
-			//chkinfloop(curr);
+			chkinfloop(curr);
 			optimize(curr->childs);
 			optloop(curr);
 			continue;
