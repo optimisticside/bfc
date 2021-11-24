@@ -44,19 +44,26 @@ void optincdec(Node *curr, InstructionType inc, InstructionType dec) {
 	prev->data = c;
 }
 
-// Optimizes nested loops.
-// An example of this is [[ ... ]] to [ ... ]
+// Runs several loop optimizations.
 void optloop(Node *node) {
 	if (node->type != I_LOOP || node->childs == NULL)
 		return;
-	if (node->childs->type != I_LOOP || node->childs->next != NULL)
-		return;
 	Node *child = node->childs;
-	node->childs = child->childs;
-	// We need to set the childs pointer to NULL,
-	// or `rmnode` will remove all of its children.
-	child->childs = NULL;
-	rmnode(child);
+	// Optimizes nested loops.
+	// An example of this is [[ ... ]] to [ ... ]
+	if (child->type == I_LOOP && child->next == NULL) {
+		node->childs = child->childs;
+		// We need to set the childs pointer to NULL,
+		// or `rmnode` will remove all of its children.
+		child->childs = NULL;
+		rmnode(child);
+	}
+	// Also optimizes clear loops, that just do something
+	// like [-], which we can replace with clear.
+	if (child->type == I_DEC && child->next == NULL && !child->data) {
+		node->type = I_CLEAR;
+		rmnode(child);
+	}
 }
 
 // Optimizes operations that execute after the program's

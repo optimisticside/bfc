@@ -72,7 +72,6 @@ Node *parse(Token *tok) {
 			continue;
 		}
 		curr = calloc(1, sizeof(Node));
-		curr->prev = prev;
 		if (root == NULL)
 			root = curr;
 		if (prev != NULL) {
@@ -80,8 +79,10 @@ Node *parse(Token *tok) {
 			// for obvious reasons.
 			if (descend)
 				prev->childs = curr;
-			else
+			else {
 				prev->next = curr;
+				curr->prev = prev;
+			}
 			curr->parent = descend ? prev : prev->parent;
 		}
 		descend = 0;
