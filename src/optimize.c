@@ -46,23 +46,34 @@ void optincdec(Node *curr, InstructionType inc, InstructionType dec) {
 
 // Runs several loop optimizations.
 void optloop(Node *node) {
-	if (node->type != I_LOOP || node->childs == NULL)
+	if (node->type != I_LOOP)
 		return;
-	Node *child = node->childs;
-	// Optimizes nested loops.
-	// An example of this is [[ ... ]] to [ ... ]
-	if (child->type == I_LOOP && child->next == NULL) {
-		node->childs = child->childs;
-		// We need to set the childs pointer to NULL,
-		// or `rmnode` will remove all of its children.
-		child->childs = NULL;
-		rmnode(child);
+	if (node->childs != NULL) {
+		Node *child = node->childs;
+		// Optimizes nested loops.
+		// An example of this is [[ ... ]] to [ ... ]
+		if (child->type == I_LOOP && child->next == NULL) {
+			node->childs = child->childs;
+			// We need to set the childs pointer to NULL,
+			// or `rmnode` will remove all of its children.
+			child->childs = NULL;
+			rmnode(child);
+		}
+		// Optimizes clear loops, that just do [-]
+		// and can be replaced by a clear instruction.
+		if (child->type == I_DEC && child->next == NULL && !child->data) {
+			node->type = I_CLEAR;
+			rmnode(child);
+		}
 	}
-	// Optimizes clear loops, that just do [-]
-	// and can be replaced by a clear instruction.
-	if (child->type == I_DEC && child->next == NULL && !child->data) {
-		node->type = I_CLEAR;
-		rmnode(child);
+	// Optimizes dead loops found at the beginning
+	// of programs before any increment or decrement operations.
+	if (node->parent == NULL) {
+		for (Node *curr = node->prev; curr != NULL; curr = curr->prev) {
+			if (curr->type == I_INC || curr->type == I_DEC || curr->type == I_INPUT)
+				return;
+		}
+		rmnode(node);
 	}
 }
 
@@ -92,8 +103,8 @@ void chkinfloop(Node *node) {
 void optimize(Node *curr) {
 	for (; curr != NULL && curr->type != I_NONE; curr = curr->next) {
 		if (curr->type == I_LOOP) {
-			chkinfloop(curr);
 			optimize(curr->childs);
+			chkinfloop(curr);
 			optloop(curr);
 			continue;
 		}
