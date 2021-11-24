@@ -10,7 +10,8 @@ void mkbuf(int size, FILE *output) {
 
 // Generates code to set up a stack frame.
 void mksetup(FILE *output) {
-	fprintf(output, "\tpushq %%rbp\n"
+	fprintf(output, "\tmovq $0, %%rax\n"
+			"\tpushq %%rbp\n"
 			"\tmovq %%rsp, %%rbp\n");
 }
 
