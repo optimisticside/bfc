@@ -6,7 +6,7 @@
 #include <stddef.h>
 #include "types.h"
 
-#define BUFSIZE 3000
+#define BUFSIZE 30000
 #define STKSIZE 50
 
 extern char *_src;
