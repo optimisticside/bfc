@@ -17,9 +17,9 @@ void rmnode(Node *node) {
 
 // Optimizes increment-decrement instruction pairs.
 void optincdec(Node *curr, InstructionType inc, InstructionType dec) {
-	Node *prev = curr->prev;
-	if (prev == NULL)
+	if (curr == NULL || curr->prev == NULL)
 		return;
+	Node *prev = curr->prev;
 	if (curr->type != inc && curr->type != dec)
 		return;
 	if (prev->type != inc && prev->type != dec)
@@ -46,7 +46,7 @@ void optincdec(Node *curr, InstructionType inc, InstructionType dec) {
 
 // Runs several loop optimizations.
 void optloop(Node *node) {
-	if (node->type != I_LOOP)
+	if (node == NULL || node->type != I_LOOP)
 		return;
 	if (node->childs != NULL) {
 		Node *child = node->childs;
@@ -104,8 +104,8 @@ void optimize(Node *curr) {
 	for (; curr != NULL && curr->type != I_NONE; curr = curr->next) {
 		if (curr->type == I_LOOP) {
 			optimize(curr->childs);
-			chkinfloop(curr);
 			optloop(curr);
+			chkinfloop(curr);
 			continue;
 		}
 		optincdec(curr, I_PTRINC, I_PTRDEC);
