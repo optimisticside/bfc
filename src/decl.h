@@ -26,6 +26,7 @@ Node *parse(Token *tok);
 void rmnode(Node *node);
 void optincdec(Node *curr, InstructionType inc, InstructionType dec);
 void optloop(Node *node);
+void optclr(Node *node);
 void optjunk(Node *node);
 void chkinfloop(Node *node);
 void optimize(Node *node);

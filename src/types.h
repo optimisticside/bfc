@@ -5,7 +5,7 @@
 typedef enum {
 	I_NONE,
 	I_PTRINC, I_PTRDEC,		// Data pointer operations
-	I_INC, I_DEC, I_CLEAR,		// Data operations
+	I_INC, I_DEC, I_CLEAR, I_SET,	// Data operations
 	I_OUTPUT, I_INPUT,		// IO operations
 	I_LOOP				// Loop
 } InstructionType;

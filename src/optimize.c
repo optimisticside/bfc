@@ -81,10 +81,24 @@ void optloop(Node *node) {
 	}
 }
 
+// Optimizes clears before inc/dec operations to just be
+// set instructions.
+void optclr(Node *node) {
+	if (arguments.optlvl < 2 || node == NULL || node->type != I_CLEAR)
+		return;
+	Node *next = node->next;
+	if (next == NULL || (next->type != I_INC && next->type != I_DEC))
+		return;
+	long val = ((next->type == I_DEC) ? -1 : 1) * (long)(next->data ? next->data : 1);
+	rmnode(next);
+	node->type = I_SET;
+	node->data = val;
+}
+
 // Optimizes operations that don't have any affects
 // on the program.
 void optjunk(Node *node) {
-	if (arguments.optlvl >= 2 && node == NULL)
+	if (arguments.optlvl < 2 || node == NULL)
 		return;
 	// Remove operations before input and clear operations,
 	// which will clobber the data.
@@ -130,8 +144,10 @@ void optimize(Node *node) {
 		optincdec(curr, I_PTRINC, I_PTRDEC);
 		optincdec(curr, I_INC, I_DEC);
 	}
-	// Junk optimization depends on the nodes
+	// Junk and clear optimization depends on the nodes
 	// ahead to also be optimized.
-	for (Node *curr = node; curr != NULL && curr->type != I_NONE; curr = curr->next)
+	for (Node *curr = node; curr != NULL && curr->type != I_NONE; curr = curr->next) {
 		optjunk(curr);
+		optclr(curr);
+	}
 }

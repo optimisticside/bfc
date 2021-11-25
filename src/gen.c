@@ -58,6 +58,10 @@ void genop(Node *curr, FILE *output) {
 	case I_CLEAR:	// Clear value at data pointer
 		fprintf(output, "\tmovb $0, (%%rax)\n");
 		break;
+	
+	case I_SET:	// Set value at data pointer
+		fprintf(output, "\tmovb $%ld, (%%rax)\n", curr->data);
+		break;
 
 	case I_INPUT:	// Read character from user
 		fprintf(output, "\tpushq %%rax\n"
