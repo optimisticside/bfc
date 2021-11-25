@@ -7,7 +7,6 @@
 #include <argp.h>
 #include "types.h"
 
-#define ARGCOUNT 2
 #define BUFSIZE 30000
 #define STKSIZE 50
 
