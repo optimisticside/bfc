@@ -44,7 +44,7 @@ int parseopt(int key, char *arg, struct argp_state *state) {
 
 // Program entry point.
 int main(int argc, char *argv[]) {
-	struct argp argp = {options, &parseopt, argdoc, doc};
+	struct argp argp = { options, &parseopt, argdoc, doc };
 	argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
 	if (arguments.infile == NULL) {
