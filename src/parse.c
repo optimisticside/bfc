@@ -2,7 +2,7 @@
 
 // Helper function to add node to stack.
 int stkpush(Node **stack, int *stkpos, Node *elem) {
-	if (++(*stkpos) > STKSIZE)
+	if (++(*stkpos) > arguments.stksize)
 		return 1;
 	stack[*stkpos] = elem;
 	return 0;
@@ -51,7 +51,7 @@ Node *parse(Token *tok) {
 	// Neighboring nodes will be arranged in a linked list.
 	// If a node has children, then it will store the pointer
 	// to its linked list of children.
-	Node **stack = calloc(STKSIZE, sizeof(Node *));
+	Node **stack = calloc(arguments.stksize, sizeof(Node *));
 	int stkpos = 0, descend = 0;
 	Node *root = NULL, *prev = NULL, *curr;
 

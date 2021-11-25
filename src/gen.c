@@ -118,7 +118,7 @@ int gen(Node *root, FILE *output) {
 	// buffer will overflow or not (we plan on doing this later).
 	// Data pointer is %rax.
 	fprintf(output, ".section .bss\n");
-	mkbuf(BUFSIZE, output);
+	mkbuf(arguments.bufsize, output);
 	fprintf(output, "\n.section .text\n"
 			".globl main\n"
 			"main:\n");

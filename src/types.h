@@ -44,6 +44,8 @@ typedef struct _Arguments {
 	int optlvl;		// Optimization level
 	int verbose;		// Produce verbose output
 	int silent;		// Mute warnings
+	int stksize;		// Bracket stack size
+	int bufsize;		// Buffer length
 } Arguments;
 
 #endif /* !_TYPES_H_ */

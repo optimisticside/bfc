@@ -1,12 +1,14 @@
 #include "decl.h"
 
 char *_src;
-Arguments arguments = { NULL, NULL, 0, 0 };
+Arguments arguments = { NULL, NULL, 0, 0, BUFSIZE, STKSIZE };
 static char *argdoc = "INFILES";
 static char *doc = "Compiles a Brainf**k program to assembly.";
 static struct argp_option options[] = {
 	{ "verbose", 'v', 0, 0, "Produce verbose output" },
 	{ "silent", 's', 0, 0, "Mutes all warnings" },
+	{ "bufsize", 'b', "SIZE", OPTION_ARG_OPTIONAL, "Sets the buffer size (defaults to 30,000 bytes)" },
+	{ "stacksize", 'z', "SIZE", OPTION_ARG_OPTIONAL, "Sets the bracket stack size to a custom value" },
 	{ 0, 'O', "OPTLVL", OPTION_ARG_OPTIONAL, "Optimization level (0 to 2)" },
 	{ "output", 'o', "OUTFILE", 0, "File to write compiled code to" },
 	{ 0 }
@@ -23,6 +25,16 @@ int parseopt(int key, char *arg, struct argp_state *state) {
 			args->optlvl = 0;
 			return ARGP_ERR_UNKNOWN;
 		}
+		break;
+	case 'b':
+		args->bufsize = atoi(arg);
+		if (args->bufsize <= 0)
+			return ARGP_ERR_UNKNOWN;
+		break;
+	case 'z':
+		args->stksize = atoi(arg);
+		if (args->stksize <= 0)
+			return ARGP_ERR_UNKNOWN;
 		break;
 	case 's':
 		args->silent = 1;
