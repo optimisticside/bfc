@@ -90,6 +90,8 @@ void optclr(Node *node) {
 	if (next == NULL || (next->type != I_INC && next->type != I_DEC))
 		return;
 	long val = ((next->type == I_DEC) ? -1 : 1) * (long)(next->data ? next->data : 1);
+	// If we remove the next node instead of the current one,
+	// we do not have to worry about it being the root node.
 	rmnode(next);
 	node->type = I_SET;
 	node->data = val;
