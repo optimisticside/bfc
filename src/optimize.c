@@ -104,7 +104,7 @@ void optjunk(Node *node) {
 
 // Check for a potential infinite loop.
 void chkinfloop(Node *node) {
-	if (node == NULL || node->type != I_LOOP)
+	if (node == NULL || node->type != I_LOOP || arguments.silent)
 		return;
 	for (Node *child = node->childs; child != NULL; child = child->next) {
 		if (child->type == I_DEC || child->type == I_INC)

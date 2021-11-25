@@ -43,6 +43,7 @@ typedef struct _Arguments {
 	char *outfile;		// Output file
 	int optlvl;		// Optimization level
 	int verbose;		// Produce verbose output
+	int silent;		// Mute warnings
 } Arguments;
 
 #endif /* !_TYPES_H_ */

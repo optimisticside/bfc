@@ -6,6 +6,7 @@ static char *argdoc = "INFILES";
 static char *doc = "Compiles a Brainf**k program to assembly.";
 static struct argp_option options[] = {
 	{ "verbose", 'v', 0, 0, "Produce verbose output" },
+	{ "silent", 's', 0, 0, "Mutes all warnings" },
 	{ 0, 'O', "OPTLVL", OPTION_ARG_OPTIONAL, "Optimization level (0 to 2)" },
 	{ "output", 'o', "OUTFILE", 0, "File to write compiled code to" },
 	{ 0 }
@@ -22,6 +23,9 @@ int parseopt(int key, char *arg, struct argp_state *state) {
 			args->optlvl = 0;
 			return ARGP_ERR_UNKNOWN;
 		}
+		break;
+	case 's':
+		args->silent = 1;
 		break;
 	case 'v':
 		args->verbose = 1;
