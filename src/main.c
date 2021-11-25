@@ -2,7 +2,7 @@
 
 char *_src;
 Arguments arguments = { NULL, NULL, 0, 0 };
-static char *argdoc = "INFILE OUTFILE";
+static char *argdoc = "INFILES";
 static char *doc = "Compiles a Brainf**k program to assembly.";
 static struct argp_option options[] = {
 	{ "verbose", 'v', 0, 0, "Produce verbose output" },
