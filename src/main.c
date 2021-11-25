@@ -28,13 +28,17 @@ int parseopt(int key, char *arg, struct argp_state *state) {
 		break;
 	case 'b':
 		args->bufsize = atoi(arg);
-		if (args->bufsize <= 0)
+		if (args->bufsize <= 0) {
+			args->bufsize = BUFSIZE;
 			return ARGP_ERR_UNKNOWN;
+		}
 		break;
 	case 'z':
 		args->stksize = atoi(arg);
-		if (args->stksize <= 0)
+		if (args->stksize <= 0) {
+			args->stksize = STKSIZE;
 			return ARGP_ERR_UNKNOWN;
+		}
 		break;
 	case 's':
 		args->silent = 1;
@@ -62,6 +66,11 @@ int parseopt(int key, char *arg, struct argp_state *state) {
 int main(int argc, char *argv[]) {
 	struct argp argp = { options, &parseopt, argdoc, doc };
 	argp_parse(&argp, argc, argv, 0, 0, &arguments);
+
+	if (arguments.bufsize <= 0)
+		arguments.bufsize = BUFSIZE;
+	if (arguments.stksize <= 0)
+		arguments.stksize = STKSIZE;
 
 	if (arguments.infile == NULL) {
 		fprintf(stderr, "No input files provided.\n");
