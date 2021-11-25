@@ -4,12 +4,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <argp.h>
 #include "types.h"
 
+#define ARGCOUNT 2
 #define BUFSIZE 30000
 #define STKSIZE 50
 
 extern char *_src;
+extern Arguments arguments;
 
 int toktype(char tok);
 Token *lex(char *buf);

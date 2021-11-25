@@ -17,7 +17,7 @@ void rmnode(Node *node) {
 
 // Optimizes increment-decrement instruction pairs.
 void optincdec(Node *curr, InstructionType inc, InstructionType dec) {
-	if (curr == NULL || curr->prev == NULL)
+	if (curr == NULL || curr->prev == NULL || arguments.optlvl < 1)
 		return;
 	Node *prev = curr->prev;
 	if (curr->type != inc && curr->type != dec)
@@ -53,7 +53,7 @@ void optloop(Node *node) {
 		Node *child = node->childs;
 		// Optimizes nested loops.
 		// An example of this is [[ ... ]] to [ ... ]
-		if (child->type == I_LOOP && child->next == NULL) {
+		if (arguments.optlvl >= 2 && child->type == I_LOOP && child->next == NULL) {
 			node->childs = child->childs;
 			// We need to set the childs pointer to NULL,
 			// or `rmnode` will remove all of its children.
@@ -62,14 +62,14 @@ void optloop(Node *node) {
 		}
 		// Optimizes clear loops, that just do [-]
 		// and can be replaced by a clear instruction.
-		if (child->type == I_DEC && child->next == NULL && !child->data) {
+		if (arguments.optlvl >= 1 && child->type == I_DEC && child->next == NULL && !child->data) {
 			node->type = I_CLEAR;
 			rmnode(child);
 		}
 	}
 	// Optimizes dead loops found at the beginning
 	// of programs before any increment or decrement operations.
-	if (node->parent == NULL) {
+	if (arguments.optlvl >= 2 && node->parent == NULL) {
 		for (Node *curr = node->prev; curr != NULL; curr = curr->prev) {
 			if (curr->type == I_INC || curr->type == I_DEC || curr->type == I_INPUT)
 				return;
@@ -84,7 +84,7 @@ void optloop(Node *node) {
 // Optimizes operations that don't have any affects
 // on the program.
 void optjunk(Node *node) {
-	if (node == NULL)
+	if (arguments.optlvl >= 2 && node == NULL)
 		return;
 	// Remove operations before input and clear operations,
 	// which will clobber the data.

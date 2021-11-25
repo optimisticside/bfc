@@ -37,4 +37,12 @@ typedef struct _Node {
 	long data;			// Any additional data
 } Node;
 
+// Arguments type.
+typedef struct _Arguments {
+	char *infile;		// Input file
+	char *outfile;		// Output file
+	int optlvl;		// Optimization level
+	int verbose;		// Produce verbose output
+} Arguments;
+
 #endif /* !_TYPES_H_ */
