@@ -60,9 +60,10 @@ void optloop(Node *node) {
 			child->childs = NULL;
 			rmnode(child);
 		}
-		// Optimizes clear loops, that just do [-]
+		// Optimizes clear loops, that  do [-] or [+]
 		// and can be replaced by a clear instruction.
-		if (arguments.optlvl >= 1 && child->type == I_DEC && child->next == NULL && !child->data) {
+		if (arguments.optlvl >= 1 && (child->type == I_DEC || child->type == I_INC)
+		    && child->next == NULL && !child->data) {
 			node->type = I_CLEAR;
 			rmnode(child);
 		}
