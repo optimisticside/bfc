@@ -109,7 +109,8 @@ void optjunk(Node *node) {
 		Node *prev = NULL;
 		for (Node *curr = node->prev; curr != NULL; curr = prev) {
 			prev = curr->prev;
-			if (curr->type != I_INC && curr->type != I_DEC && curr->type != I_CLEAR && curr->type != I_INPUT)
+			if (curr->type != I_INC && curr->type != I_DEC
+			    && curr->type != I_CLEAR && curr->type != I_INPUT)
 				break;
 			if (prev == NULL && curr->parent == NULL)
 				curr->type = I_NONE;
