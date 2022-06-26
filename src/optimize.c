@@ -29,10 +29,10 @@ void optincdec(Node *curr, InstructionType inc, InstructionType dec) {
 	long c = a + b;
 	rmnode(curr);
 	if (c == 0) {
-		// In case this previous node is the root node
-		// in the list, we will not deallocate it, but rather
-		// change its type to I_NONE. This is done in other places
-		// of this file for the same reason.
+		// In case this previous node is the root node in the list, we
+		// will not deallocate it, but rather change its type to
+		// I_NONE. This is done in other places of this file for the
+		// same reason.
 		if (prev->prev == NULL && prev->parent == NULL)
 			prev->type = I_NONE;
 		else
