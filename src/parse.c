@@ -15,8 +15,7 @@ int stkpop(Node **stack, int *stkpos) {
 	return 0;
 }
 
-// Debugs the parser by printing the syntax tree
-// in a very simple format.
+// Debugs the parser by printing the syntax tree in a very simple format.
 void printnode(Node *node, int *id) {
 	for (; node != NULL && node->type != I_NONE; node = node->next) {
 		if (node->type == I_LOOP) {
@@ -29,8 +28,7 @@ void printnode(Node *node, int *id) {
 	putchar('\n');
 }
 
-// Retrieves an instruction type to correspond
-// the given token type.
+// Retrieves an instruction type to correspond the given token type.
 // Ignores TOK_CLOSE.
 InstructionType getinst(TokenType type) {
 	switch (type) {
@@ -45,23 +43,22 @@ InstructionType getinst(TokenType type) {
 	}
 }
 
-// Main parsing routine.
-// Generates abstract syntax tree from stream of tokens.
+// Main parsing routine. Generates abstract syntax tree from stream of tokens.
 Node *parse(Token *tok) {
-	// Neighboring nodes will be arranged in a linked list.
-	// If a node has children, then it will store the pointer
-	// to its linked list of children.
+	// Neighboring nodes will be arranged in a linked list. If a node has
+	// children, then it will store the pointer to its linked list of
+	// children.
 	Node **stack = calloc(arguments.stksize, sizeof(Node *));
 	int stkpos = 0, descend = 0;
 	Node *root = NULL, *prev = NULL, *curr;
 
 	for (; tok != NULL && tok->type != TOK_NONE; tok = tok->next) {
-		// We will continue adding nodes in a linked list
-		// for adjecent operators. Once we reach the start of a loop
-		// we will set the descend flag.
+		// We will continue adding nodes in a linked list for adjacent
+		// operators. Once we reach the start of a loop we will set the
+		// descend flag.
 		if (tok->type == TOK_CLOSE) {
-			// We provide it with the current node for
-			// debugging purposes.
+			// We provide it with the current node for debugging
+			// purposes.
 			if (stkpop(stack, &stkpos) != 0) {
 				fprintf(stderr, "Unpaired closing bracket at token %ld (stack size %d)\n",
 						(long)(tok->src - _src), stkpos);

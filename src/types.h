@@ -6,7 +6,7 @@ typedef enum {
 	I_NONE,
 	I_PTRINC, I_PTRDEC,		// Data pointer operations
 	I_INC, I_DEC, I_CLEAR, I_SET,	// Data operations
-	I_OUTPUT, I_INPUT,		// IO operations
+	I_OUTPUT, I_INPUT,		// I/O operations
 	I_LOOP				// Loop
 } InstructionType;
 
@@ -15,7 +15,7 @@ typedef enum {
 	TOK_NONE,
 	TOK_PTRINC, TOK_PTRDEC,		// Data pointer operations
 	TOK_INC, TOK_DEC,		// Data operations
-	TOK_INPUT, TOK_OUTPUT,		// IO operations
+	TOK_INPUT, TOK_OUTPUT,		// I/O operations
 	TOK_OPEN, TOK_CLOSE,		// Brackets
 } TokenType;
 

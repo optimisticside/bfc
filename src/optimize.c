@@ -82,8 +82,7 @@ void optloop(Node *node) {
 	}
 }
 
-// Optimizes clears before inc/dec operations to just be
-// set instructions.
+// Optimizes clears before inc/dec operations to just be set instructions.
 void optclr(Node *node) {
 	if (arguments.optlvl < 2 || node == NULL || node->type != I_CLEAR)
 		return;
@@ -91,20 +90,19 @@ void optclr(Node *node) {
 	if (next == NULL || (next->type != I_INC && next->type != I_DEC))
 		return;
 	long val = ((next->type == I_DEC) ? -1 : 1) * (long)(next->data ? next->data : 1);
-	// If we remove the next node instead of the current one,
-	// we do not have to worry about it being the root node.
+	// If we remove the next node instead of the current one, we do not
+	// have to worry about it being the root node.
 	rmnode(next);
 	node->type = I_SET;
 	node->data = val;
 }
 
-// Optimizes operations that don't have any affects
-// on the program.
+// Optimizes operations that don't have any affects on the program.
 void optjunk(Node *node) {
 	if (arguments.optlvl < 2 || node == NULL)
 		return;
-	// Remove operations before input and clear operations,
-	// which will clobber the data.
+	// Remove operations before input and clear operations, which will
+	// clobber the data.
 	if (node->type == I_INPUT || node->type == I_CLEAR) {
 		Node *prev = NULL;
 		for (Node *curr = node->prev; curr != NULL; curr = prev) {
@@ -134,9 +132,8 @@ void chkinfloop(Node *node) {
 		(long)(node->tok->src - _src), node);
 }
 
-// Main tree optimization routine.
-// Loops through nodes and calls itself recursively
-// to descend tree.
+// Main tree optimization routine. Loops through nodes and calls itself
+// recursively to descend tree.
 void optimize(Node *node) {
 	for (Node *curr = node; curr != NULL && curr->type != I_NONE; curr = curr->next) {
 		if (curr->type == I_LOOP) {
@@ -148,8 +145,8 @@ void optimize(Node *node) {
 		optincdec(curr, I_PTRINC, I_PTRDEC);
 		optincdec(curr, I_INC, I_DEC);
 	}
-	// Junk and clear optimization depends on the nodes
-	// ahead to also be optimized.
+	// Junk and clear optimization depends on the nodes ahead to also be
+	// optimized.
 	for (Node *curr = node; curr != NULL && curr->type != I_NONE; curr = curr->next) {
 		optjunk(curr);
 		optclr(curr);

@@ -82,8 +82,7 @@ void genop(Node *curr, FILE *output) {
 	}
 }
 
-// Generates all nodes.
-// Calls itself recursively if necessary.
+// Generates all nodes. Calls itself recursively if necessary.
 void genlist(Node *start, int *loopcnt, FILE *output) {
 	for (Node *curr = start; curr != NULL; curr = curr->next) {
 		if (curr->type == I_NONE)
@@ -107,16 +106,14 @@ void genloop(Node *parent, int *loopcnt, FILE *output) {
 }
 
 
-// Main code-generation routine.
-// Takes control as the main program routine,
-// and writes to the output file.
+// Main code-generation routine. Takes control as the main program routine, and
+// writes to the output file.
 int gen(Node *root, FILE *output) {
 	// Some basic information:
-	// The 3000-byte data table will be allocated
-	// in the data segment and zero'd during compile time.
-	// We do not currently plan on checking to see if that
-	// buffer will overflow or not (we plan on doing this later).
-	// Data pointer is %rax.
+	// The 3000-byte data table will be allocated in the data segment and
+	// zero'd during compile time. We do not currently plan on checking to
+	// see if that buffer will overflow or not (we plan on doing this
+	// later). Data pointer is %rax.
 	fprintf(output, ".section .bss\n");
 	mkbuf(arguments.bufsize, output);
 	fprintf(output, "\n.section .text\n"
@@ -125,8 +122,8 @@ int gen(Node *root, FILE *output) {
 	mksetup(output);
 	fprintf(output, "\tlea buf(%%rip), %%rax\n");
 
-	// `loopcnt` helps us create unique positions
-	// to jump to for multiple loops.
+	// `loopcnt` helps us create unique positions to jump to for multiple
+	// loops.
 	int loopcnt = 1;
 	genlist(root, &loopcnt, output);
 

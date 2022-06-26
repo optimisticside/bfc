@@ -15,8 +15,7 @@ int toktype(char tok) {
 	}
 }
 
-// Main lexer routine.
-// Converts raw data into token stream.
+// Main lexer routine. Converts raw data into token stream.
 Token *lex(char *buf) {
 	Token *head = NULL, *prev = NULL, *curr;
 	char c;
