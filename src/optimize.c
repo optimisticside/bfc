@@ -15,17 +15,17 @@ void rmnode(Node *node) {
 	free(node);
 }
 
-// Optimizes increment-decrement instruction pairs.
-void optincdec(Node *curr, InstructionType inc, InstructionType dec) {
+// Optimizes addition-subtration instruction pairs.
+void optaddsub(Node *curr, InstructionType add, InstructionType sub) {
 	if (curr == NULL || curr->prev == NULL || arguments.optlvl < 1)
 		return;
 	Node *prev = curr->prev;
-	if (curr->type != inc && curr->type != dec)
+	if (curr->type != add && curr->type != sub)
 		return;
-	if (prev->type != inc && prev->type != dec)
+	if (prev->type != add && prev->type != sub)
 		return;
-	long a = ((prev->type == dec) ? -1 : 1) * (long)(prev->data ? prev->data : 1);
-	long b = ((curr->type == dec) ? -1 : 1) * (long)(curr->data ? prev->data : 1);
+	long a = ((prev->type == sub) ? -1 : 1) * (long)(prev->data ? prev->data : 1);
+	long b = ((curr->type == sub) ? -1 : 1) * (long)(curr->data ? prev->data : 1);
 	long c = a + b;
 	rmnode(curr);
 	if (c == 0) {
@@ -39,7 +39,7 @@ void optincdec(Node *curr, InstructionType inc, InstructionType dec) {
 			rmnode(prev);
 		return;
 	}
-	prev->type = (c > 0) ? inc : dec;
+	prev->type = (c > 0) ? add : sub;
 	if (c < 0)
 		c = -c;
 	prev->data = c;
@@ -60,19 +60,19 @@ void optloop(Node *node) {
 			child->childs = NULL;
 			rmnode(child);
 		}
-		// Optimizes clear loops, that  do [-] or [+]
-		// and can be replaced by a clear instruction.
-		if (arguments.optlvl >= 1 && (child->type == I_DEC || child->type == I_INC)
+		// Optimizes clear loops, that  do [-] or [+] and can be
+		// replaced by a clear instruction.
+		if (arguments.optlvl >= 1 && (child->type == I_SUB || child->type == I_ADD)
 		    && child->next == NULL && !child->data) {
 			node->type = I_CLEAR;
 			rmnode(child);
 		}
 	}
-	// Optimizes dead loops found at the beginning
-	// of programs before any increment or decrement operations.
+	// Optimizes dead loops found at the beginning of programs before any
+	// increment or decrement operations.
 	if (arguments.optlvl >= 2 && node->parent == NULL) {
 		for (Node *curr = node->prev; curr != NULL; curr = curr->prev) {
-			if (curr->type == I_INC || curr->type == I_DEC || curr->type == I_INPUT)
+			if (curr->type == I_ADD || curr->type == I_SUB || curr->type == I_INPUT)
 				return;
 		}
 		if (node->prev == NULL)
@@ -87,9 +87,9 @@ void optclr(Node *node) {
 	if (arguments.optlvl < 2 || node == NULL || node->type != I_CLEAR)
 		return;
 	Node *next = node->next;
-	if (next == NULL || (next->type != I_INC && next->type != I_DEC))
+	if (next == NULL || (next->type != I_ADD && next->type != I_SUB))
 		return;
-	long val = ((next->type == I_DEC) ? -1 : 1) * (long)(next->data ? next->data : 1);
+	long val = ((next->type == I_SUB) ? -1 : 1) * (long)(next->data ? next->data : 1);
 	// If we remove the next node instead of the current one, we do not
 	// have to worry about it being the root node.
 	rmnode(next);
@@ -107,7 +107,7 @@ void optjunk(Node *node) {
 		Node *prev = NULL;
 		for (Node *curr = node->prev; curr != NULL; curr = prev) {
 			prev = curr->prev;
-			if (curr->type != I_INC && curr->type != I_DEC
+			if (curr->type != I_ADD && curr->type != I_SUB
 			    && curr->type != I_CLEAR && curr->type != I_INPUT)
 				break;
 			if (prev == NULL && curr->parent == NULL)
@@ -123,9 +123,9 @@ void chkinfloop(Node *node) {
 	if (node == NULL || node->type != I_LOOP || arguments.silent)
 		return;
 	for (Node *child = node->childs; child != NULL; child = child->next) {
-		if (child->type == I_DEC || child->type == I_INC)
+		if (child->type == I_ADD || child->type == I_SUB)
 			return;
-		if (child->type == I_PTRINC || child->type == I_PTRDEC)
+		if (child->type == I_PTRADD || child->type == I_PTRSUB)
 			return;
 	}
 	printf("Warning: Potential infinite loop at token %ld (node %p)\n",
@@ -142,8 +142,8 @@ void optimize(Node *node) {
 			chkinfloop(curr);
 			continue;
 		}
-		optincdec(curr, I_PTRINC, I_PTRDEC);
-		optincdec(curr, I_INC, I_DEC);
+		optaddsub(curr, I_PTRADD, I_PTRSUB);
+		optaddsub(curr, I_ADD, I_SUB);
 	}
 	// Junk and clear optimization depends on the nodes ahead to also be
 	// optimized.

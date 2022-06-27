@@ -27,29 +27,29 @@ void genop(Node *curr, FILE *output) {
 				curr, curr->type, (long)(curr->tok->src - _src));
 		exit(-1);
 
-	case I_INC:	// Increment value at data pointer
-		if (curr->data)
+	case I_ADD:	// Add to value at data pointer
+		if (curr->data && curr->data != 1)
 			fprintf(output, "\taddb $%ld, (%%rax)\n", curr->data);
 		else
 			fprintf(output, "\tincb (%%rax)\n");
 		break;
 
-	case I_DEC:	// Decrement value at data pointer
-		if (curr->data)
+	case I_SUB:	// Subtract from value at data pointer
+		if (curr->data && curr->data != 1)
 			fprintf(output, "\tsubb $%ld, (%%rax)\n", curr->data);
 		else
 			fprintf(output, "\tdecb (%%rax)\n");
 		break;
 
-	case I_PTRINC:	// Increment data pointer
-		if (curr->data)
+	case I_PTRADD:	// Move data pointer right
+		if (curr->data && curr->data != 1)
 			fprintf(output, "\taddq $%ld, %%rax\n", curr->data);
 		else
 			fprintf(output, "\tincq %%rax\n");
 		break;
 
-	case I_PTRDEC:	// Decrement data pointer
-		if (curr->data)
+	case I_PTRSUB:	// Move data pointer left
+		if (curr->data && curr->data != 1)
 			fprintf(output, "\tsubq $%ld, %%rax\n", curr->data);
 		else
 			fprintf(output, "\tdecq %%rax\n");

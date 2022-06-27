@@ -32,10 +32,10 @@ void printnode(Node *node, int *id) {
 // Ignores TOK_CLOSE.
 InstructionType getinst(TokenType type) {
 	switch (type) {
-	case TOK_PTRINC:	return I_PTRINC;
-	case TOK_PTRDEC:	return I_PTRDEC;
-	case TOK_INC:		return I_INC;
-	case TOK_DEC:		return I_DEC;
+	case TOK_PTRINC:	return I_PTRADD;
+	case TOK_PTRDEC:	return I_PTRSUB;
+	case TOK_INC:		return I_ADD;
+	case TOK_DEC:		return I_SUB;
 	case TOK_INPUT:		return I_INPUT;
 	case TOK_OUTPUT:	return I_OUTPUT;
 	case TOK_OPEN:		return I_LOOP;

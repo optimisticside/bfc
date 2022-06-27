@@ -4,8 +4,8 @@
 // Instruction types
 typedef enum {
 	I_NONE,
-	I_PTRINC, I_PTRDEC,		// Data pointer operations
-	I_INC, I_DEC, I_CLEAR, I_SET,	// Data operations
+	I_PTRADD, I_PTRSUB,		// Data pointer operations
+	I_ADD, I_SUB, I_CLEAR, I_SET,	// Data operations
 	I_OUTPUT, I_INPUT,		// I/O operations
 	I_LOOP				// Loop
 } InstructionType;
